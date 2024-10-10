@@ -1,0 +1,12 @@
+Funktionale Anforderungen:
+	- Manuelles Auslösen von DHCP
+	- Netzverkehr analysieren
+		- IP-Adresse (wer redet mit wem?)
+		- Protokoll herausfinden (wie wird geredet ?)
+		- ggf Inhalt ?! (was wird geredet
+	- Darstellen der, oben genannten, analysierten Daten
+	
+Nicht-funktinoale Anforderungen:
+	- dynamisch programmiert 
+		- unabhängig von Bildschirmauflösung
+		- unabhängig von IP und MAC

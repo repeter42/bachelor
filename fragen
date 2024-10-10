@@ -1,0 +1,31 @@
+Warum müsste man DHCP manuell auslösen? 
+\_bzw welche Vorteile hat das?
+--> evtl. nicht configurierte ports
+
+chatgpt ? -> ja aber: (und die Arbeit muss tzd noch 10 wochen wert sein --> die gesparte Zeit wo adners herein stecken)
+--> ALLES MARKIEREN
+
+Quellen
+--> alle Quellen erlaubt, nicht nur wissenschaftliche Artikel
+\--> aber screenshot oder website als pdf speichern --> und in referenzen Ordner packen
+
+Funktionale, nicht-funktionale anforderungen
+Expose schreiben --> gut das als bewerbung für den Zweitgutachter mitzugeben
+
+Mockup machen!
+\_ analyse tool soll ähnlich funktionalität wie wireshark haben
+
+Zweitgutachter besoregen!
+
+raspberry in den kiosk modus bringen
+
+portability - nicht statisch für Bildschirm sondern dynamisch (soll halt auch auf anderen Geräten funktionieren)
+- IP / MAC
+- Andere bildschirmauflösung
+
+HTW git repo - zur überwachung 
+\_ profs Rechte geben
+
+Unit tests ?
+--> wird klarer bzw ggf nochmal absprechen !!!
+
