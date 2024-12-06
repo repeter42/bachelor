@@ -1,0 +1,20 @@
+# Entwicklung eines Netzwerkprüfgeräts
+
+Im Rahmen dieser Bachelorarbeit soll ein Gerät entwickelt werdern, welches dazu verwendet werden kann, um festzustellen ob ein Ethernetport Zugang zu einem Netzwerk erlaubt. Hierzu soll das Gerät über ein LAN-Kable an einen Ethernetport angeschlossen werden, ein DHCP Discover durchführen und versuchen eine IP Addresse zu erhalten.  
+Wenn es Zugriff auf das Netz hat, soll das Gerät Informationen zum Netzwerk anzeigen, wie Netzbereich, aber auch statistische Informationen über sichtbare Protokolle.  
+Ein Touchscreen soll sowohl als Eingabegerät zur Bedienung, als auch als Ausgabegerät für Informationen dienen.  
+Das Gerät soll auf Benutzerfreundlichkeit und geringen Konfigurationsaufwand von einem Benutzer optimiert werden.  
+In einer Literaturreschersche soll nach bereiets vorhanden Lösungen gesucht werden, um mögliche Lösungsansätze miteinander zu vergleichen.  
+Software, entwickelt im Rahmen des Projektes, soll unter einer openSource Lizenz verwaltet werden.
+Des Weiteren wird in dieser Bachelorarbeit geprüft, ob und wie DHCP implementiert werden kann und muss. 
+
+Ziel der Bachelorarbeit ist es zu überprüfen, ob es möglich ist das beschreibene Gerät zu entwickeln. Es soll weitere folgende Anforderungen erfüllen:  
+* Das Gerät soll sich in einem Finanziellen Rahmen unter 300 Euro befinden.  
+* Für die Hardwaretechnische Umsetzung soll ein Raspberry Pi und Touchscreen, mit einer entsprechenden Energiequelle, verwendet werden, sodass ein tragbares Testgerät entsteht.  
+* Das Gerät soll mit einem, für Bachelorarbeiten typischen, Zeitaufwand entwickelt werden.  
+* Es soll ein Anwendung mit einem UserInterface für ein Touchscreen entwickelt werden.  
+* Das Gerät soll versuchen einen DHCP Lease zu bekommen dies in dem eben genannten UI darzustellen.  * Die Anwendung sollte im Kioskmode starten.  
+
+Wenn es der Zeitliche Rahmen erlaubt, können folgende weitere Sicherheitsfeatures implemetniert werden:  
+* Ping Sweep, durch einen Ping Sweep könnte ein schneller Überblick, über das evtl. freiliegende Netz geschaffen werden.  
+* MAC Masking, hierbei wird eigene MAC Addresse auf, die eines bereits im Netz befindlichen Gerätes, gesetzt. Mit dieser Methodik könnte geprüft werden ob der Port, Angriffe auf die Portsecurity, erkennt.

@@ -1,0 +1,13 @@
+Hardware
+	- Raspberry PI
+	- HDMI Touchscreen
+
+Software
+	- Python
+	- Pyhton GUI Framework ... to be decided (PyQt, PySide, Tkinter, wzPython, PyGKT, PySimpleGUI)
+		- Features: PyQt, PySide, PyGTK?
+		- Documentation/Comunity: PyQt, PySide
+		- Complexity: PyQt, PySide, PyGTK (higher than others)
+		\___ --> PyQt ?
+	- Python Package Handeling --> probably raw sockets
+	-  

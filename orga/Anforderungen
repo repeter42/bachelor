@@ -1,0 +1,17 @@
+Funktionale Anforderungen:
+	- Manuelles Auslösen von DHCP
+	- Netzverkehr analysieren
+		- IP-Adresse (wer redet mit wem?)
+		- Protokoll herausfinden (wie wird geredet ?)
+		- ggf Inhalt ?! (was wird geredet
+	- Darstellen der, oben genannten, analysierten Daten ... in einer UI
+	- Suchbar nach IP, (MAC) und Protokoll	
+
+Nicht-funktinoale Anforderungen:
+	- dynamisch programmiert (soll auch auf anderen geräten laufen können)
+		- unabhängig von Bildschirmauflösung
+		- unabhängig von IP und MAC
+	- eingeschränktes Feature set des users		?! ist das überhaupt sinnvoll ?
+	
+
+
