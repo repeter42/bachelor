@@ -1,0 +1,3 @@
+interface link state
+	Does it send any packages/ ethernet frames ? --> that might trigger some sort port security
+

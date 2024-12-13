@@ -1,0 +1,67 @@
+# Objekte:
+
+Scan 
+* pcap_file_location (str)
+? * HDCP Informationen ?
+Quarantänenetz (bool)
+...
+
+DHCP Informationen
+* DNS (str)
+* Gateway (str)
+* wie viele offer (int)
+* Carrier / ISP (str)
+* Anz Netzteilnehmer (int)
+? * Relay Agent (str) ?
+...
+
+Netzteilnehmer
+* MAC (str)
+* IP (str)
+? * open Ports ?
+... 
+
+
+Model_obj (singelton)
+* Zustand (enum)
+* DHCP Response Timeout
+* func: set_dhcp_timeout()
+
+dhcp_discover_response
+* dhcp_message_type
+
+
+# Zustände:
+
+# Funktionen:
+template
+def my_function(param1, param2):
+    """
+    This is a summary of what the function does.
+
+    :param param1: Description of the first parameter.
+    :type param1: str
+    :param param2: Description of the second parameter.
+    :type param2: int
+    :returns: Description of the return value.
+    :rtype: bool
+    :raises ValueError: If an error occurs, this exception is raised.
+    """
+
+
+def get_dhcp_offer():
+    """
+    This function sends a dhcp discover.
+
+    :returns: Returns the dhcp_offer object.
+    :rtype: dhcp_offer
+    :raises ValueError: If response is not a vaild dhcp offer (as specified in RFC 21..), this exception is raised.
+    :raises TimeOut: If the system did not recieve a dhcp offer in defined TimeOut, this exception is raised.
+    :raises InterfaceError: If the interface link state is not "up" and no package/frame can be sent, this exception is raised.
+    """
+
+def parse_dhcp_offer(raw_dhcp_discover_response):
+    """
+    This function parses the response to the sent dhcp discover.
+
+    :returns: parsed dhcp: discover response or false if invalid dhcp_offer

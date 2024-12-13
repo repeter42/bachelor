@@ -1,17 +1,24 @@
 Funktionale Anforderungen:
-	- Manuelles Auslösen von DHCP
-	- Netzverkehr analysieren
+	- versuchen IP zu bekommen
+		- Manuelles Auslösen von DHCP
+		- DHCP Response Parsen
+	- Netzverkehr mitschneiden bevor ich IP bekomme (ARP)
+	- Netzwerkinterface in Promiscuos mode schalten ?? 
+	- Netzverkehr analysieren 
 		- IP-Adresse (wer redet mit wem?)
 		- Protokoll herausfinden (wie wird geredet ?)
 		- ggf Inhalt ?! (was wird geredet
 	- Darstellen der, oben genannten, analysierten Daten ... in einer UI
-	- Suchbar nach IP, (MAC) und Protokoll	
+	- Filter nach IP, (MAC) und Protokoll	
+	- Scan speichern
+	- Scan laden
+	- ? Batteriestatus anzeigen
 
 Nicht-funktinoale Anforderungen:
-	- dynamisch programmiert (soll auch auf anderen geräten laufen können)
+	- dynamisch programmiert (soll auch auf anderen geräten laufen können ... welche Python3 untestützen!! / Vorraussetzung hierbei Linux artiges OS (/bin/bash vorhanden))
 		- unabhängig von Bildschirmauflösung
 		- unabhängig von IP und MAC
-	- eingeschränktes Feature set des users		?! ist das überhaupt sinnvoll ?
+	- Anwednung soll im Kisosmodus laufen, Anwender soll nicht auf unterliegendes OS zugreifen können 		(eingeschränktes Feature set des users		?! ist das überhaupt sinnvoll ?)
 	
 
 

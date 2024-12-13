@@ -1,0 +1,70 @@
+Template
+UC n
+
+z - Ziel;
+a - Akteure;
+vb - Vorbedingung;
+std - Standardablauf;
+alt - Alternative Abläufe;
+nb - Nachbedingung;
+# - Bermerkung;
+
+
+----------------------------
+globale Anforderungen:
+* Zugang zum Gebäude
+* Erlaubnis Netzwerktest durchführen zu dürfen
+* SD Karte mit schreibbare Partionen (nicht PXE Network boot oder sowas)
+
+UC 1
+
+z - Netzwerkport auf Aktivität prüfen;
+a - User, System;
+vb - 
+* Gerät an Neztwerkport anschließen
+* Sicher stellen dass ich keine Packte automatisch sende !!!
+std - 
+* User drückt Knopf um Traffic-Mitschnitt zu starten
+* Knopf beschreibung ändert sich um zu signalisieren Mitschnitt läuft
+* MITTSCHNITT ABGESCHLOSSEN
+* Netzwerkinformationen werden angezeigt
+* User kann Ergebnisse speichern;
+alt - 
+* Gerät an Neztwerkport anschließen
+* Gerät einschalten
+* User drückt Knopf um Traffic-Mittschnitt zu starten
+* Knopf beschreibung ändert sich um zu signalisieren Mitschnitt läuft
+* User bricht Mitschnitt ab;
+nb - ;
+# - ;
+
+
+UC 2
+
+z - Nutzer möchte prüfen ob über diesen Netzwerkport eine IP Addresse bezogen werden kann;
+a - User, System;
+vb - 
+* Gerät an Netzwerkport angeschlossen
+? * Timeout ist gesetzt ?;
+std - 
+* User triggert DHCP Discover Manuell
+* System bekommt Respose (DHCP Offer)
+* System parsed Informationen von Response
+* System akzeptiert random Offer (eins von eins/mehrere);
+alt - 
+* User triggert DHCP Manuell
+* System bekommt keine Response
+* System bricht vorgang nach timeout ab;
+nb - ;
+# - ;
+
+
+
+
+
+
+
+
+
+
+
