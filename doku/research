@@ -1,3 +1,13 @@
 interface link state
 	Does it send any packages/ ethernet frames ? --> that might trigger some sort port security
 
+Fluke
+	Eig erher physisch ... guckt wie stark 
+
+avahi(mDNS)
+	what exactly does that ?! ... maybe i want that ?!
+
+ethtool
+	clientsite ethernet config stuff ... 
+
+ieee802.x1
