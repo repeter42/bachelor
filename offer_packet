@@ -1,0 +1,41 @@
+###[ Ethernet ]###
+  dst       = e4:5f:01:fc:78:a3
+  src       = 60:b5:8d:94:ee:21
+  type      = IPv4
+###[ IP ]###
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 576
+     id        = 1
+     flags     = 
+     frag      = 0
+     ttl       = 64
+     proto     = udp
+     chksum    = 0x9340
+     src       = 192.168.178.1
+     dst       = 192.168.178.25
+     \options   \
+###[ UDP ]###
+        sport     = bootps
+        dport     = bootpc
+        len       = 556
+        chksum    = 0x3037
+###[ BOOTP ]###
+           op        = BOOTREPLY
+           htype     = Ethernet (10Mb)
+           hlen      = 6
+           hops      = 0
+           xid       = 0x0
+           secs      = 0
+           flags     = 
+           ciaddr    = 0.0.0.0
+           yiaddr    = 192.168.178.25
+           siaddr    = 192.168.178.1
+           giaddr    = 0.0.0.0
+           chaddr    = 65:34:3a:35:66:3a (+ 10 nul pad)
+           sname     = b''
+           file      = b''
+           options   = b'c\x82Sc' (DHCP magic)
+###[ DHCP options ]###
+              options   = [message-type=offer server_id=192.168.178.1 lease_time=864000 renewal_time=432000 rebinding_time=756000 subnet_mask=255.255.255.0 router=192.168.178.1 name_server=192.168.178.1 domain=b'fritz.box' interface-mtu=1500 broadcast_address=192.168.178.255 NTP_server=192.168.178.1 158=b'\x04\xc0\xa8\xb2\x01' end pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad pad]

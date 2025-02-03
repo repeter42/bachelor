@@ -49,19 +49,29 @@ def my_function(param1, param2):
     """
 
 
-def get_dhcp_offer():
+def send_dhcp_discover():
     """
-    This function sends a dhcp discover.
+    This function is trigger by the user in the UI and sends a dhcp discover.
 
     :returns: Returns the dhcp_offer object.
-    :rtype: dhcp_offer
+    :rtype: dhcp_offer_eth_package
     :raises ValueError: If response is not a vaild dhcp offer (as specified in RFC 21..), this exception is raised.
     :raises TimeOut: If the system did not recieve a dhcp offer in defined TimeOut, this exception is raised.
     :raises InterfaceError: If the interface link state is not "up" and no package/frame can be sent, this exception is raised.
     """
 
-def parse_dhcp_offer(raw_dhcp_discover_response):
+def get_dhcp_offer(dhcp_offer_eth_package):
     """
-    This function parses the response to the sent dhcp discover.
+    This function processed the recieved response from send_dhcp_discover to get dhcp_offer.
 
-    :returns: parsed dhcp: discover response or false if invalid dhcp_offer
+    :returns: dhcp_offer
+    :rtype: package
+    """
+
+
+def dhcp_request(dhcp_offer)
+    """
+    This function uses the dhcp_offer to get necessary information to send dhcp_request
+
+
+

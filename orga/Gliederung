@@ -3,12 +3,22 @@ LAN - Testprojekt
 # 1 Einführung
 # 2 Grundlagen
 ## 2.1 Package Networking (OSI Layer 2 - 4)
-## 2.1 DHCP 
-# 3 Konzeptionierung
-## 3.1 Anforderungen
-## 3.2 TechStack
-## (3.3 Unit Tests)
+### 2.1.1 Data Link Layer
+### 2.1.2 Network Layer
+### 2.1.3 Transport Layer
+## 2.2 DHCP 
+### 2.2.1 Ursprung BOOTP
+### 2.2.2 Architektur 
+### 2.2.3 Stati
+## 3 Konzeptionierung
+### 3.1 Anforderungen
+### 3.2 Use Case
+### 3.3 UserInterface MockUp
+### 3.3 Komponenten Diagramm
+### 3.4 Klassendiagramm
+### 3.5 TechStack
+### 3.6 Unit Tests
 # 4 Implementierung
-# (5 Test ?!)
+# Tests
 # 6 Fazit
 
