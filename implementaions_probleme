@@ -1,18 +1,76 @@
+01)
 Das Script braucht Zugriff auf die Netzwerkkarte um den Datenverkehr sniffen, scheiben und empfangen zu können. Die einfachste Lösung, zumindes für die Entwicklungsphase wäre das Script mit root Rechten auszuführen, allerdings soll das Script später diese Aktionen ohne weitere menschliche Interaktionen alleine ausführen können, sodass dies keine vernünftige Lösung ist. 
 --> besser als root laufen lassen 
     --> weitere probleme wie binden der neuen ip addressse auch gelöst (kann mit linux capabitlities nicht gelöst werden ... bekommt immer noch permission denied
-
+02)
 Nach dem senden des DHCP Discover Packets und empfangen des DHCP Offers, enthält die BOOTP Message eine falsche MAC Addresse, welches sich für mich nicht erklären lässt. Da im Ethernetframe allerdings die richtige MAC Addresse steht werde ich dies erst betrachten sobalt dies zu einem Problem wird und das Programm weiter coden.
 
-
+03) Um weitere Informationen über bestimmete typen in scapy zu bekommen werden manache type ausgegeben. Eine weiter Methode um die richtigen imports zu bekommen, ist es scapy im Terminal zu öffnen und den Typen oder die Funktion ohne Argumente in scapy eingeben und der Type oder die Funktion werden mit dessen imports gezeigt
 debugg statements um scapy 
 
+04)
+beim senden eines dhcp discover packets hab scapy die response, welche in wireshark zu sehen war, nicht erkannt. Eine mögliche Lösungsidee war einen sniff zu beginnen und dann das DHCPDISCOVER zu senden und alle Packete danach manuell darauf überprüfen ob diese ein DHCPOFFER sind. Nach etwas recherche kam folgende einstellung in der conf datei zu Tage. Man muss scapy ausdrücklich sagen dass es nicht darauf achten soll ob die IP Addressen von Sender und Empfänger übereinstimmen. Wie es bei DHCPDISCOVER der Fall ist. Das Discover wird im Broadcast gesendet und der Empfänger wird nicht spezifiziert. (wie auch der rechnert hat noch keine IP Addresse)
 scapy conf.checkIPaddr = False 
 
+0x)
+need to bind ip address assigned by dhcp server
+
+05)
 scapy stop sniffing 
     Problem: 
-    --> scapys sniffing funktion hat nur zwei abbruch bedingungne counter, endet nach bestimmter anzahl an gesnifften packeten oder timeout, endet nach bestimmert zeit
+        --> scapys sniffing funktion hat nur zwei abbruch bedingungne counter, endet nach bestimmter anzahl an gesnifften packeten oder timeout, endet nach bestimmert zeit
     Lösungsansatz:
-    --> benutzen des counter oder timeout Paramerter der Funktion von sniffing und dies dann in eine while schleife packen
+        --> benutzen des counter oder timeout Paramerter der Funktion von sniffing und dies dann in eine while schleife packen
     Tatsächliche lösung:
-    --> sniff funktion hat einen stop_filter. Der stop filter ist eine funktion welche das gesniffte packet übergeben bekommt und prüft ob ein packet die Bedingungne für einen möglichen Abbruch, also ein Erreichen des gewünschten Packets, erfüllt hat. Man kann diese Funktion nutzen um auf eine globale definierte Abbruchbedinngung zuzugreifen und dem entsprechend den Sniffingporzess abzubrechen. Allerdings muss man darauf achten dass diese Funktion ein Argument, das Packet welches eigentlich entscheiden sollte ob der Sniffingprozess abgebrochen werden soll. 
+        --> sniff funktion hat einen stop_filter. Der stop filter ist eine funktion welche das gesniffte packet übergeben bekommt und prüft ob ein packet die Bedingungne für einen möglichen Abbruch, also ein Erreichen des gewünschten Packets, erfüllt hat. Man kann diese Funktion nutzen um auf eine globale definierte Abbruchbedinngung zuzugreifen und dem entsprechend den Sniffingporzess abzubrechen. Allerdings muss man darauf achten dass diese Funktion ein Argument, das Packet welches eigentlich entscheiden sollte ob der Sniffingprozess abgebrochen werden soll.
+
+06)
+welche datenbank?
+    Datenbanken ohne db server: (sqlite, tinydb)
+        + db in einer Datei --> kein db server notwendig
+        + geeignet für kleinere Anwendungen 
+        - nur ein Zugriff gleichzeitig
+    Datenbank mit db server: (MariaDB, Postgersql, ...)
+        - sb server notwendig
+        - für große Anwendungen gedacht 
+        + mehrere gleichzeitige Zugriffe möglich
+    --> für meine kleine anwendung reicht eine db ohne server (sqlite, tinydb)
+        \_> wobei die möglichkeit von sqlite gleichzeitig lesen und schreiben zu können (wal mode) die entscheidung vereinfacht hat (es sollen packet daten in die db geschrieben werden und gleichzeitig sollen diese aber auch dargestellt werden.
+
+07)
+subnet to cidr
+    in den dhcp optionen bekommt man nur die Subnetumaske, um die neuen ip addresse allerdings zu binden muss man den cidr mit der ip addresse angeben 
+    --> deshalb muss eine funktion implementiert werden um die subnetzmaske in die cidr notation umzuwandeln
+
+08) 
+timestamp übersetzung
+    --> in progess
+
+09)
+in sniffer.py in packet_handler
+    falls in der packet_handler (die callback funktion von scapys sniff funktion) ein fehler auftritt wird der ganze sniff prozess abgebrochen und nicht das packet gedropt oder einfach nicht verarbeitet wie man es vllt erwarten würde.
+
+10)
+Zugriff auf dynamisch auf packet schichten. 
+Problem:
+    bei unterschiedlichen protokollen unterschiedliche weisen dies zu rufen (pkt[TCP], pkt[UDP], pkt[ICMP], ... was auch immer) man kann auch auf die packet schichten über einen index zugreifen ... da musste ersmal drauf kommen.
+    hat das packet eine raw payload?, wo ist diese? (meist hinter tcp oder ether ... sinnvoll aber darf man sich nicht drauf verlassen), wie viele schichten hat das packet (wichtig für zugriff über index), welche schichten hat es (ether, raw; ether, ip, tcp, raw; ether, ip, tcp) --> das ist nur tcp 
+    jedes packet hat ein attribut in dem alle packet schichten 
+    --> alles nicht ideal 
+    ... vllt besser pkt.haslayer(whatever) und dann auf diese schicht zugreifen
+
+11)
+Filtern von Ethernet packets welche nicht auf IP basieren ... führt zu fehlern und ist nervig beim debuggen und
+
+12) keine ahnung von webdesigne
+    ChatGPT to the rescue html und css mit chatgpt generieren lassen, code erklären lassen und änderungen vornehmen
+    --> dynamischer content anscheinend schwer für chatgpt immer nur statischer content
+    --> kivy (halbwegs einfach genug)    
+
+-1) touch zwei finger scrolling configurieren
+    firefox in about:config rum spielen (nach touch und gesture gesucht ... nix gebracht)
+    chromium chrome://flags --> touch ui --> enable (hat auch nix gebracht)
+    chromium ne extension installieren welche das können soll crxMouse-estures ... nix da
+    --> erstmal sein lassen, chrom hat wenigstens vernünftig dicke scroll bars ...
+
+

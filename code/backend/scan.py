@@ -6,11 +6,12 @@ class scan():
     This class is supposed to be a singelton like object in which settings are saved and accessed
     """
 
-    def __init__(self, in_timeout=20, in_isListening=True):
+    def __init__(self, in_timeout=2, in_isListening=True):
         self.timeout = in_timeout
         self.isListening = in_isListening
         self.nicInfo = self.set_nicInfo()
         self.whichFunction = None   # for debugging purposes
+
 
     def set_nicInfo(self):
         iface_list = get_if_list()
@@ -28,7 +29,7 @@ class scan():
         self.timeout = in_timeout
     
     def get_timeout(self):
-        return self.timeout()
+        return self.timeout
 
 
     def set_isListening(self, in_isListening):
@@ -43,6 +44,7 @@ class scan():
 
     def get_function(self):
         return self.whichFunction
+    
     
 
 

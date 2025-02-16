@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packet Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <input type="text" id="search" placeholder="Search packets...">
+    </header>
+    <main>
+        <aside id="packet-list">
+            {% for packet in packets %}
+                <div class="packet">
+                    <div>
+                        <div class="field">ID { packet.id }</div>
+                        <div class="field">Proto { packet.proto }</div>
+                    </div>
+                    <div>
+                        <div class="field">src MAC { packet.src_mac }</div>
+                        <div class="field">dst MAC { packet.dst_mac }</div>
+                    </div>
+                    <div>
+                        <div class="field">src IP { packet.src_ip }</div>
+                        <div class="field">dst IP { packet.dst_ip }</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </aside>
+        <section id="packet-detail">
+            <h2>Packet Details</h2>
+            <p>Select a packet to view details.</p>
+        </section>
+    </main>
+</body>
+</html>
