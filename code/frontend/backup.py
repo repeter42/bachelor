@@ -8,7 +8,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Color, Rectangle
 from kivy.metrics import dp
 
-from scapy.layers.l2 import Ether
+from backend.hwinfo import scan_settings
 
 class ColorLabel(Label):
     def __init__(self, color=(0.5, 0.5, 0.5, 1), **kwargs):
@@ -69,21 +69,21 @@ class GridButton(Button):
     def get_combined_text(self):
         return "\n".join(self.text_data)
 
-    # --- Add these methods to allow scrolling on touchscreens ---
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            # record the starting touch position
-            self._touch_start = touch.pos
-        return super().on_touch_down(touch)
+    # # --- Add these methods to allow scrolling on touchscreens ---
+    # def on_touch_down(self, touch):
+    #     if self.collide_point(*touch.pos):
+    #         # record the starting touch position
+    #         self._touch_start = touch.pos
+    #     return super().on_touch_down(touch)
 
-    def on_touch_move(self, touch):
-        if self.collide_point(*touch.pos) and hasattr(self, "_touch_start"):
-            # if vertical movement exceeds a small threshold, let ScrollView handle it
-            if abs(touch.pos[1] - self._touch_start[1]) > dp(10):
-                if touch.grab_current is self:
-                    touch.ungrab(self)
-                return False  # do not consume; allow parent to scroll
-        return super().on_touch_move(touch)
+    # def on_touch_move(self, touch):
+    #     if self.collide_point(*touch.pos) and hasattr(self, "_touch_start"):
+    #         # if vertical movement exceeds a small threshold, let ScrollView handle it
+    #         if abs(touch.pos[1] - self._touch_start[1]) > dp(10):
+    #             if touch.grab_current is self:
+    #                 touch.ungrab(self)
+    #             return False  # do not consume; allow parent to scroll
+    #     return super().on_touch_move(touch)
 
 
 
@@ -107,18 +107,15 @@ class ButtonGrid(GridLayout):
             button.bind(on_release=self.on_button_click)
             self.add_widget(button)
 
-    def add_row(self, packet):
+    def add_row(self):
         self.row_count += 1
-        if type(packet) != type(Ether()):
-            raise TypeError
-
         packet_info = (
             f"ID: {self.row_count}",
-            "Proto: \{ID\}",
-            "IP_src: e4:5f:01:fc:78:a4",
-            "IP_dst: e4:5f:01:fc:78:a4",
-            "MAC_src: e4:5f:01:fc:78:a4",
-            "MAC_dst: e4:5f:01:fc:78:a4"
+            "ID: \\{ID\\}",
+            "ID: \\{ID\\}",
+            "ID: \\{ID\\}",
+            "ID: \\{ID\\}",
+            "ID: \\{ID\\}"
         )
         new_button = GridButton(text=packet_info, size_hint_y=None, height=60)
         self.buttons.append(new_button)
@@ -169,8 +166,10 @@ class EthPortTestApp(App):
 
         return layout
 
+
     def btn_add_row_click(self, instance):
         self.label_grid.add_row()
+
 
 
 if __name__ == "__main__":

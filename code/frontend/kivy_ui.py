@@ -8,7 +8,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Color, Rectangle
 from kivy.metrics import dp
 
-from backend.scan import scan_settings
+from scapy.layers.l2 import Ether
 
 class ColorLabel(Label):
     def __init__(self, color=(0.5, 0.5, 0.5, 1), **kwargs):
@@ -69,21 +69,21 @@ class GridButton(Button):
     def get_combined_text(self):
         return "\n".join(self.text_data)
 
-    # # --- Add these methods to allow scrolling on touchscreens ---
-    # def on_touch_down(self, touch):
-    #     if self.collide_point(*touch.pos):
-    #         # record the starting touch position
-    #         self._touch_start = touch.pos
-    #     return super().on_touch_down(touch)
+    # --- Add these methods to allow scrolling on touchscreens ---
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            # record the starting touch position
+            self._touch_start = touch.pos
+        return super().on_touch_down(touch)
 
-    # def on_touch_move(self, touch):
-    #     if self.collide_point(*touch.pos) and hasattr(self, "_touch_start"):
-    #         # if vertical movement exceeds a small threshold, let ScrollView handle it
-    #         if abs(touch.pos[1] - self._touch_start[1]) > dp(10):
-    #             if touch.grab_current is self:
-    #                 touch.ungrab(self)
-    #             return False  # do not consume; allow parent to scroll
-    #     return super().on_touch_move(touch)
+    def on_touch_move(self, touch):
+        if self.collide_point(*touch.pos) and hasattr(self, "_touch_start"):
+            # if vertical movement exceeds a small threshold, let ScrollView handle it
+            if abs(touch.pos[1] - self._touch_start[1]) > dp(10):
+                if touch.grab_current is self:
+                    touch.ungrab(self)
+                return False  # do not consume; allow parent to scroll
+        return super().on_touch_move(touch)
 
 
 
@@ -94,7 +94,7 @@ class ButtonGrid(GridLayout):
         self.size_hint_x = 1
         self.size_hint_y = None  # Allow dynamic height
         self.bind(minimum_height=self.setter('height'))
-        self.row_count = 0
+        # self.row_count = 0
         self.buttons = []
         self.big_label = lb_detail_in
 
@@ -107,15 +107,19 @@ class ButtonGrid(GridLayout):
             button.bind(on_release=self.on_button_click)
             self.add_widget(button)
 
-    def add_row(self):
-        self.row_count += 1
+    def add_row(self, packet):
+        # self.row_count += 1
+        if type(packet) != type(Ether()):
+            raise TypeError
+
+
         packet_info = (
-            f"ID: {self.row_count}",
-            "ID: \\{ID\\}",
-            "ID: \\{ID\\}",
-            "ID: \\{ID\\}",
-            "ID: \\{ID\\}",
-            "ID: \\{ID\\}"
+            f"ID: {packet[0]}",
+            f"Proto: {packet[6]}",
+            f"IP_src: {packet[4]}",
+            f"IP_dst: {packet[5]}",
+            f"MAC_src: {packet[1]}",
+            f"MAC_dst: {packet[2]}"
         )
         new_button = GridButton(text=packet_info, size_hint_y=None, height=60)
         self.buttons.append(new_button)

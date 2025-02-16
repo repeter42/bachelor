@@ -1,7 +1,7 @@
 import scapy
 from scapy.all import *
 
-class scan():
+class hw_info():
     """
     This class is supposed to be a singelton like object in which settings are saved and accessed
     """
@@ -37,15 +37,7 @@ class scan():
 
     def get_isListening(self):
         return self.isListening
-
-
-    def set_function(self, funName):
-        self.whichFunction = funName
-
-    def get_function(self):
-        return self.whichFunction
-    
     
 
 
-scan_settings = scan()
+my_hw_info = hw_info()

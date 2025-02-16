@@ -5,7 +5,7 @@ import scapy.layers
 import scapy.layers.l2
 import math
 
-from scan import scan_settings
+from backend.hwinfo import my_hw_info
 
 
 
@@ -30,7 +30,7 @@ class dhcp():
         This function returns the built ethernet frame of the dhcp_discover paacket
         :return: None
         """
-        device_mac = scan_settings.get_nicInfo()[1]
+        device_mac = my_hw_info.get_nicInfo()[1]
         eth_frame = scapy.layers.l2.Ether(type=2048, dst="ff:ff:ff:ff:ff:ff", src=device_mac)
         ip_packet = scapy.layers.inet.IP(src="0.0.0.0", dst="255.255.255.255", proto="udp")
         proto_segment = scapy.layers.inet.UDP(sport=68, dport=67)
@@ -48,7 +48,7 @@ class dhcp():
         :type dhcp_offer: scapy.layers.l2.Ether
         :return: None
         """
-        device_mac = scan_settings.get_nicInfo()[1]
+        device_mac = my_hw_info.get_nicInfo()[1]
         eth_frame = scapy.layers.l2.Ether(type=2048, dst="ff:ff:ff:ff:ff:ff", src=device_mac)
         ip_packet = scapy.layers.inet.IP(src="0.0.0.0", dst="255.255.255.255", proto="udp")
         proto_segment = scapy.layers.inet.UDP(sport=68, dport=67)
@@ -110,9 +110,9 @@ class dhcp():
         :returns:  list of replys to the requests ... there could be more than one reponse to the sent request
         :rtype: scapy.layers.l2.Ether
         """
-        device_name = scan_settings.get_nicInfo()[0]
+        device_name = my_hw_info.get_nicInfo()[0]
         conf.checkIPaddr = False            # setting this conf is very important ... if not set, scapy can not match the dhcp offer to my sent dhcp discover
-        ans, unans =srp(packet, iface=device_name, multi=True, timeout=scan_settings.get_timeout())
+        ans, unans =srp(packet, iface=device_name, multi=True, timeout=my_hw_info.get_timeout())
         
         answers = []                        # creating a list for answers, as there could be multiple responses
         for send_recive in ans:             # itterating through all the responses
@@ -171,7 +171,7 @@ class dhcp():
         cidr = self.cidr
         if (new_ip or cidr) == None:
             raise ValueError
-        subprocess.run(f"ip addr add {new_ip}/{cidr} dev {scan_settings.get_nicInfo()[0]}", shell=True, check=True)
+        subprocess.run(f"ip addr add {new_ip}/{cidr} dev {my_hw_info.get_nicInfo()[0]}", shell=True, check=True)
 
 
     def flush_old_id(self):
@@ -179,18 +179,16 @@ class dhcp():
         Remove all IPs from an interface.
         :return: void
         """
-        subprocess.run(f"ip add flush dev {scan_settings.get_nicInfo()[0]}")
+        subprocess.run(f"ip add flush dev {my_hw_info.get_nicInfo()[0]}")
 
 
 # # dhcp usage: # here for test and debugging purposes
 
-my_dhcp = dhcp()
-my_dhcp.build_dhcp_discover()
-my_dhcp.offers = my_dhcp.send_packet(my_dhcp.discover)
-my_dhcp.build_dhcp_request()
-my_dhcp.ack = my_dhcp.send_packet(my_dhcp.request)
-print("4 debugging")
-
+# my_dhcp = dhcp()
+# my_dhcp.build_dhcp_discover()
+# my_dhcp.offers = my_dhcp.send_packet(my_dhcp.discover)
+# my_dhcp.build_dhcp_request()
+# my_dhcp.ack = my_dhcp.send_packet(my_dhcp.request)
 
 
 # print(type(ack[DHCP].options))         # type: ignore
