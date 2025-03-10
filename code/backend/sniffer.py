@@ -4,20 +4,31 @@ from datetime import datetime as dt
 
 from backend.hwinfo import my_hw_info
 from frontend.kivy_ui import EthPortTestApp
+from frontend.kivy_ui import my_eth_tester
 
 class sniffer():
     def __init__(self):
-        self.db_path= "/home/tester/ba/traffic.db"
-        self.init_db()
         self.isListening = True
         self.timeout = 2
         self.packet_id = 0
+        self.write_to_pcap = False
+        self.db_path= f"/home/tester/ba/traffic_{dt.utcnow}.db"
+        self.init_db()
+
+    def set_isListening(self, isListening_in):
+        self.isListening = isListening_in
+        if self.isListening:
+            self.sniff_traffic()
+    
+    def get_isListening(self):
+        return self.isListening
 
     def packet_handler(self, pkt):
         """
         This function triggers when a new packet is detected by the scapys sniff function. It writes the packet to a pcap file and into the database
         """
-        wrpcap("traffic.pcap", pkt, append=True)     # appends sniffed packets to pcap file
+        if self.write_to_pcap:
+            wrpcap("traffic.pcap", pkt, append=True)     # appends sniffed packets to pcap file
 
         pkt_values = [None] * 11         # later to be converted into a tuple to write into database ... filled with None's so when intendet value can not be parsed, None will be written into database
         # packet id needs to be set manually so that the id can be turned over to the ui ... otherwise the database could do that implicitly
@@ -62,7 +73,7 @@ class sniffer():
         connection.commit()
         connection.close()
 
-        EthPortTestApp.add_packet(pkt_values_tuple)
+        my_eth_tester.add_packet(packet=pkt_values_tuple)
 
 
     def stop_sniffing(x):
@@ -103,3 +114,4 @@ class sniffer():
         cursor.execute(create_table)
         connection.commit()
         connection.close()
+

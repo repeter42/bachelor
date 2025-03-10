@@ -1,0 +1,11 @@
+00) Portauthentifizierung - 802.1X
+01) Externe IP und ISP - 
+    "curl -s https://ipinfo.io/ip" und "whois <IP>" 
+    falls:  keine org-name
+        ->  descr:          Transferred to the RIPE region on 2022-03-15T23:39:33Z.
+        ->  whois -h whois.ripe.net <IP>
+        ==>> org-name:  "ding-ding-ding jackpot"
+02) grafana als Frontend ?!
+03) als Consolenanwendung ?!
+04) Discover neares Switch      -   Link Layer Discovery Protocol / Cisco Discovery Protocol / Extreme Discovery Protocol
+05) Reporting

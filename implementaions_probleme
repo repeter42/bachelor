@@ -4,6 +4,8 @@ Das Script braucht Zugriff auf die Netzwerkkarte um den Datenverkehr sniffen, sc
     --> weitere probleme wie binden der neuen ip addressse auch gelöst (kann mit linux capabitlities nicht gelöst werden ... bekommt immer noch permission denied
 02)
 Nach dem senden des DHCP Discover Packets und empfangen des DHCP Offers, enthält die BOOTP Message eine falsche MAC Addresse, welches sich für mich nicht erklären lässt. Da im Ethernetframe allerdings die richtige MAC Addresse steht werde ich dies erst betrachten sobalt dies zu einem Problem wird und das Programm weiter coden.
+--> scapy holt sich die mac adresse als str von der netzwerkarte und nicht als byte repräsentation welche es selbst als input dür chaddr benötigt ... kind of DUMB
+    --> MEIN FEHLER: vorher wurde versucht die ip addresse zu bestätigen durch setzen der yiaddr ... das ist Falsch vor dem ACK ist diese immer noch 0.0.0.0 und wird durch die DHCP option(50) gesetzt wird, requested_addr bei scapy
 
 03) Um weitere Informationen über bestimmete typen in scapy zu bekommen werden manache type ausgegeben. Eine weiter Methode um die richtigen imports zu bekommen, ist es scapy im Terminal zu öffnen und den Typen oder die Funktion ohne Argumente in scapy eingeben und der Type oder die Funktion werden mit dessen imports gezeigt
 debugg statements um scapy 

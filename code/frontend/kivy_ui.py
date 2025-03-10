@@ -9,6 +9,8 @@ from kivy.graphics import Color, Rectangle
 from kivy.metrics import dp
 
 from scapy.layers.l2 import Ether
+# from backend.sniffer import sniffer
+from backend.hwinfo import my_hw_info
 
 class ColorLabel(Label):
     def __init__(self, color=(0.5, 0.5, 0.5, 1), **kwargs):
@@ -42,6 +44,7 @@ class GridButton(Button):
     def __init__(self, text, color=(0.5, 0.5, 0.5, 1), **kwargs):
         super().__init__(**kwargs)
         self.padding_percentage = 0.02
+        # gonna be unnecessary 
         self.text_data = text
         self.layout = GridLayout(cols=2, rows=3, size_hint=(1, 1))
         self.add_widget(self.layout)
@@ -66,6 +69,7 @@ class GridButton(Button):
         self.layout.size = self.size
         self.layout.pos = self.pos
 
+    # gonna be unnecessry
     def get_combined_text(self):
         return "\n".join(self.text_data)
 
@@ -86,7 +90,6 @@ class GridButton(Button):
         return super().on_touch_move(touch)
 
 
-
 class ButtonGrid(GridLayout):
     def __init__(self, lb_detail_in, **kwargs):
         super().__init__(**kwargs)
@@ -100,7 +103,7 @@ class ButtonGrid(GridLayout):
 
     def populate_grid(self, color):
         self.clear_widgets()
-        for button in reversed(self.buttons):
+        for button in reversed(self.bubtn_add_row_clickttons):
             button.background_color = (0.9, 0.9, 0.9, 1) if color else (0.8, 0.8, 0.8, 1)
             color = not color
             # Bind on_release instead of on_touch_down.
@@ -132,16 +135,19 @@ class ButtonGrid(GridLayout):
 
 class EthPortTestApp(App):
     def build(self):
+
+        from backend.sniffer import sniffer
+        self.my_sniffer = sniffer()
         # Top bar with search input and buttons.
         top_bar = BoxLayout(size_hint_y=None, height=50, spacing=5, padding=5)
         search_input = TextInput(hint_text="Search...", size_hint_x=0.4, height=50)
-        btn1 = Button(text="Add Row", size_hint_x=0.15, height=50, on_press=self.btn_add_row_click)
-        btn2 = Button(text="Btn 2", size_hint_x=0.15, height=50)
+        btn_start_listen = Button(text="start listen", size_hint_x=0.15, height=50, on_press=self.btn_start_listening)
+        btn_stop_listen = Button(text="stop listen", size_hint_x=0.15, height=50, on_press=self.btn_stop_listening)
         btn3 = Button(text="Btn 3", size_hint_x=0.15, height=50)
         btn4 = Button(text="Btn 4", size_hint_x=0.15, height=50)
         top_bar.add_widget(search_input)
-        top_bar.add_widget(btn1)
-        top_bar.add_widget(btn2)
+        top_bar.add_widget(btn_start_listen)
+        top_bar.add_widget(btn_stop_listen)
         top_bar.add_widget(btn3)
         top_bar.add_widget(btn4)
 
@@ -173,6 +179,13 @@ class EthPortTestApp(App):
     def add_packet(self, packet):
         self.label_grid.add_row(packet)
 
+    def btn_start_listening(self, instance):
+        self.my_sniffer.set_isListening(isListening_in=True)
 
+    def btn_stop_listening(self, instance):
+        self.my_sniffer.set_isListening(isListening_in=False)
+
+
+my_eth_tester = EthPortTestApp()
 if __name__ == "__main__":
-    EthPortTestApp().run()
+    my_eth_tester.run()

@@ -1,0 +1,42 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:134.0) Gecko/20100101 Firefox/134.0" version="26.0.8">
+  <diagram name="Page-1" id="0_1LERUj_Su6B35XoExn">
+    <mxGraphModel dx="1434" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="8NqDNcjnTglQHzUcswUO-1" value="&lt;div&gt;Frontend&lt;/div&gt;" style="html=1;dropTarget=0;whiteSpace=wrap;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="230" width="290" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="8NqDNcjnTglQHzUcswUO-2" value="" style="shape=module;jettyWidth=8;jettyHeight=4;" vertex="1" parent="8NqDNcjnTglQHzUcswUO-1">
+          <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+            <mxPoint x="-27" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8NqDNcjnTglQHzUcswUO-3" value="DHCP" style="html=1;dropTarget=0;whiteSpace=wrap;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="300" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="8NqDNcjnTglQHzUcswUO-4" value="" style="shape=module;jettyWidth=8;jettyHeight=4;" vertex="1" parent="8NqDNcjnTglQHzUcswUO-3">
+          <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+            <mxPoint x="-27" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8NqDNcjnTglQHzUcswUO-5" value="Analyse" style="html=1;dropTarget=0;whiteSpace=wrap;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="450" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="8NqDNcjnTglQHzUcswUO-6" value="" style="shape=module;jettyWidth=8;jettyHeight=4;" vertex="1" parent="8NqDNcjnTglQHzUcswUO-5">
+          <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+            <mxPoint x="-27" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8NqDNcjnTglQHzUcswUO-7" value="NetzwerkSniffer" style="html=1;dropTarget=0;whiteSpace=wrap;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="140" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="8NqDNcjnTglQHzUcswUO-8" value="" style="shape=module;jettyWidth=8;jettyHeight=4;" vertex="1" parent="8NqDNcjnTglQHzUcswUO-7">
+          <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+            <mxPoint x="-27" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
