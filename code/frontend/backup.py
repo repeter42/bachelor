@@ -8,7 +8,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Color, Rectangle
 from kivy.metrics import dp
 
-from backend.hwinfo import scan_settings
+# from backend.hwinfo import scan_settings
 
 class ColorLabel(Label):
     def __init__(self, color=(0.5, 0.5, 0.5, 1), **kwargs):

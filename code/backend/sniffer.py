@@ -20,12 +20,14 @@ class sniffer():
         if self.isListening:
             self.sniff_traffic()
     
+
     def get_isListening(self):
         return self.isListening
 
+
     def packet_handler(self, pkt):
         """
-        This function triggers when a new packet is detected by the scapys sniff function. It writes the packet to a pcap file and into the database
+        This function triggers when a new packet is detected by the scapys sniff function. It writes the packet to a pcap file and into the database.
         """
         if self.write_to_pcap:
             wrpcap("traffic.pcap", pkt, append=True)     # appends sniffed packets to pcap file

@@ -21,6 +21,7 @@ class dhcp():
         self.request = None     # type: scapy.layers.l2.Ether
         self.ack = None           # type: scapy.layers.l2.Ether
         self.new_ip = None      # type: str
+        self.gateway = None     # type: str
         self.cidr = None        # type: int
         self.options = []       # type: list[str]     # dhcp offer or ack could have different options --> this list always contains the newest option list
 
@@ -37,6 +38,7 @@ class dhcp():
         bootp_message = scapy.layers.dhcp.BOOTP(op=1, chaddr=device_mac)
         dhcp_discover = scapy.layers.dhcp.DHCP(options=[("message-type", "discover"), ("end")])     # adding ("chaddr", device_mac) to list, does not change send chaddr in dhcp_offer
         eth_dhcp_discover = eth_frame/ip_packet/proto_segment/bootp_message/dhcp_discover
+        # eth_dhcp_discover.show()
         self.discover = eth_dhcp_discover
 
 
@@ -59,9 +61,10 @@ class dhcp():
         assigned_ip = self.new_ip
         # print(f"assigned ip: {assigned_ip}")
 
-        bootp_message = scapy.layers.dhcp.BOOTP(op=1, chaddr=device_mac, ciaddr=assigned_ip)
-        dhcp_request = scapy.layers.dhcp.DHCP(options=[("message-type", "request"), ("end")])
+        bootp_message = scapy.layers.dhcp.BOOTP(op=1, chaddr=device_mac)
+        dhcp_request = scapy.layers.dhcp.DHCP(options=[("message-type", "request"), ("requested_addr", assigned_ip), ("end")])
         eth_dhcp_request = eth_frame/ip_packet/proto_segment/bootp_message/dhcp_request
+
         self.request = eth_dhcp_request
 
 
@@ -76,15 +79,15 @@ class dhcp():
         if replys == None:
             raise ValueError
         
-        # replys[0].show()
+        replys[0].show()
         # print(replys[0]["DHCP"].options[0])
         if replys[0]["DHCP"].options[0][1] == 2:            # options[0] --> first object in list of options (beeing "message-type"); options[0][1] --> value of "message-type" ... can be read in rfc2132
             self.offers = replys
             self.offerCounter = len(self.offers)
-        elif (replys[0]["DHCP"].options[0][1] == 5) and len(replys) == 1:       # 
+        elif (replys[0]["DHCP"].options[0][1] == 5) and len(replys) == 1:       # 5 is an ack 
             self.ack = replys[0]
         else:
-            print("wtf is going on ... this should never have been printed")
+            print("If this code path is triggert, the server did neither send an dhcp offer nor a dhcp ack ... therefore something went wrong :(")
             raise ValueError
         
         first_reply = replys[0]
@@ -97,8 +100,9 @@ class dhcp():
             if option[0] == "subnet_mask":
                 self.cidr = self.subent_to_cidr(option[1])
 
+            if option[0] == "router":
+                self.gateway = option[1]
         self.options = clean_options
-
 
 
     def send_packet(self, packet): 
@@ -174,21 +178,22 @@ class dhcp():
         subprocess.run(f"ip addr add {new_ip}/{cidr} dev {my_hw_info.get_nicInfo()[0]}", shell=True, check=True)
 
 
-    def flush_old_id(self):
+    def flush_old_ip(self):
         """
         Remove all IPs from an interface.
         :return: void
         """
         subprocess.run(f"ip add flush dev {my_hw_info.get_nicInfo()[0]}")
+        subprocess.run(f"ip route add default via {self.gateway} dev {my_hw_info.get_nicInfo()[0]}")
 
 
 # # dhcp usage: # here for test and debugging purposes
 
-# my_dhcp = dhcp()
-# my_dhcp.build_dhcp_discover()
-# my_dhcp.offers = my_dhcp.send_packet(my_dhcp.discover)
-# my_dhcp.build_dhcp_request()
-# my_dhcp.ack = my_dhcp.send_packet(my_dhcp.request)
+my_dhcp = dhcp()
+my_dhcp.build_dhcp_discover()
+my_dhcp.offers = my_dhcp.send_packet(my_dhcp.discover)
+my_dhcp.build_dhcp_request()
+my_dhcp.ack = my_dhcp.send_packet(my_dhcp.request)
 
 
 # print(type(ack[DHCP].options))         # type: ignore

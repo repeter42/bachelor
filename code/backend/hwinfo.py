@@ -18,9 +18,16 @@ class hw_info():
         for iface in iface_list:
             if iface.startswith(("en", "eth")):
                 nicName = iface
-                nicMac = get_if_hwaddr(iface)
-                return (nicName, nicMac) 
-    
+                strMac = get_if_hwaddr(iface)       # this is only a string of the mac address ... not a byte format which is required by scapy
+                strMac =  strMac.replace(":", "")
+                byteMac = bytes.fromhex(strMac)
+                bytecount = len(byteMac)
+                while len(byteMac) < 6:
+                     byteMac = b'\x00' + byteMac
+                
+                return (nicName, byteMac) 
+
+
     def get_nicInfo(self):
         return self.nicInfo
 
@@ -32,11 +39,11 @@ class hw_info():
         return self.timeout
 
 
-    def set_isListening(self, in_isListening):
-        self.isListening = in_isListening
+    # def set_isListening(self, in_isListening):
+    #     self.isListening = in_isListening
 
-    def get_isListening(self):
-        return self.isListening
+    # def get_isListening(self):
+    #     return self.isListening
     
 
 
