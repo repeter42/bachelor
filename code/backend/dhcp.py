@@ -107,7 +107,7 @@ class dhcp():
 
     def send_packet(self, packet): 
         """
-        This function sends a packet (bootrequest: dhcpoffer and dhcprequest), and waits for responses (bootreply) and returns these.
+        This function sends a packet (bootrequest: dhcpdiscover and dhcprequest), and waits for responses (bootreply) and returns these.
 
         :packet: the dhcp packet to be send 
         :type packet: scapy.layers.l2.Ether
@@ -166,25 +166,35 @@ class dhcp():
         return cidr
 
 
-    def bind_ip(self):
+    def bind_new_ip(self):
         """
         Binds the new IP to the interface. 
         :return: void
         """
+        self.flush_old_ip(self)     # bevor new ip can be bound old ip needs to be removed
         new_ip = self.new_ip
         cidr = self.cidr
         if (new_ip or cidr) == None:
             raise ValueError
         subprocess.run(f"ip addr add {new_ip}/{cidr} dev {my_hw_info.get_nicInfo()[0]}", shell=True, check=True)
+        subprocess.run(f"ip route add default via {self.gateway} dev {my_hw_info.get_nicInfo()[0]}")
+        # subprocess.run(f"ip route add {self.cidr} dev {my_hw_info.get_nicInfo()[0]}")
 
 
-    def flush_old_ip(self):
+    def release_and_flush_old_ip(self):
         """
         Remove all IPs from an interface.
         :return: void
         """
+        self.build_dhcp_release(self)
         subprocess.run(f"ip add flush dev {my_hw_info.get_nicInfo()[0]}")
-        subprocess.run(f"ip route add default via {self.gateway} dev {my_hw_info.get_nicInfo()[0]}")
+
+
+    def build_dhcp_release(self):
+        """
+        This function builds a DHCp Release, which is nessecary to no starve the dhcp server of IP addresses.
+        """
+        
 
 
 # # dhcp usage: # here for test and debugging purposes
@@ -194,6 +204,7 @@ my_dhcp.build_dhcp_discover()
 my_dhcp.offers = my_dhcp.send_packet(my_dhcp.discover)
 my_dhcp.build_dhcp_request()
 my_dhcp.ack = my_dhcp.send_packet(my_dhcp.request)
+my_dhcp.bind_new_ip()
 
 
 # print(type(ack[DHCP].options))         # type: ignore

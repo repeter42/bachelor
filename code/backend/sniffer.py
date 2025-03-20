@@ -3,15 +3,16 @@ import sqlite3 as sql
 from datetime import datetime as dt
 
 from backend.hwinfo import my_hw_info
-from frontend.kivy_ui import EthPortTestApp
+# from frontend.kivy_ui import EthPortTestApp
 from frontend.kivy_ui import my_eth_tester
 
 class sniffer():
     def __init__(self):
         self.isListening = True
+        self.newPacket = False
         self.timeout = 2
         self.packet_id = 0
-        self.write_to_pcap = False
+        self.write_to_pcap = True
         self.db_path= f"/home/tester/ba/traffic_{dt.utcnow}.db"
         self.init_db()
 
@@ -76,9 +77,10 @@ class sniffer():
         connection.close()
 
         my_eth_tester.add_packet(packet=pkt_values_tuple)
+        self.newPacket = True
 
 
-    def stop_sniffing(x):
+    def stop_sniffing_check(x):
         if my_hw_info.get_isListening():
             return False
         else:
@@ -89,7 +91,7 @@ class sniffer():
         # while scan_settings.get_isListening():
         #    print(scan_settings.get_isListening())
         iface_name = my_hw_info.get_nicInfo()[0]
-        sniff(prn=self.packet_handler, stop_filter=self.stop_sniffing, iface=iface_name)       # it is important to not actually call the function packet_handler() instead only name it to be called on packets arival ... otherwise scapy does not turn over the packet previously sniffed and the function is missing the required input
+        sniff(prn=self.packet_handler, stop_filter=self.stop_sniffing_check, iface=iface_name)       # it is important to not actually call the function packet_handler() instead only name it to be called on packets arival ... otherwise scapy does not turn over the packet previously sniffed and the function is missing the required input
 
 
     def init_db(self):
