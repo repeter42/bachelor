@@ -1,5 +1,16 @@
-# bachelor
-Arbeitskontrolle meiner BA
+# Ethernet Testgeraet
 
-Dieses Repo dient sowohl als BackUp als auch als Dokumentation meines Arbeitsfortschritts. Um dies Effektiv gestalten zu können wird in, noch genauer zu bestimmenden, regelmäßigen Abständen der Fortschritt in das Repo gepushed.
+## Beschreibung
+...
 
+## Requirments
+Um das Projekt erfolgreich zum laufen zu bringen, müssen folgenden Vorraussetzungen erüllt werden:
+* Das Projekt muss auf einer Linux Distribution ausgeführt werden. (Entwickelt auf raspbian)
+* Das Projekt muss als _root_ ausgeführt werden --> Empfehlung: den Projektordner unter /root ablegen
+* Benötigte Binaries vom Betriebssystem:
+    \_ Vorinstalliert: curl, python 
+    \_ zu installierende: whois (notwendig für Carrier check)
+(* DHCP Server deaktivieren EVTL)
+
+## How to Use
+... 

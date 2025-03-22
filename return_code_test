@@ -1,0 +1,7 @@
+curl --connect-timeout 1 https://1.1.1.1 &>/dev/null
+if [ "$?" == "0" ]
+then
+  echo 'We are online!'
+else
+  echo 'We are not online :('
+fi

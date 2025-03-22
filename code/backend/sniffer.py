@@ -7,6 +7,7 @@ from backend.hwinfo import my_hw_info
 from frontend.kivy_ui import my_eth_tester
 
 class sniffer():
+
     def __init__(self):
         self.isListening = True
         self.newPacket = False
@@ -16,11 +17,12 @@ class sniffer():
         self.db_path= f"/home/tester/ba/traffic_{dt.utcnow}.db"
         self.init_db()
 
+
     def set_isListening(self, isListening_in):
         self.isListening = isListening_in
         if self.isListening:
             self.sniff_traffic()
-    
+
 
     def get_isListening(self):
         return self.isListening
