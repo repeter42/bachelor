@@ -2,39 +2,36 @@ from scapy.all import *
 import sqlite3 as sql
 from datetime import datetime as dt
 
-from backend.hwinfo import my_hw_info
+from hwinfo import my_hw_info
 # from frontend.kivy_ui import EthPortTestApp
-from frontend.kivy_ui import my_eth_tester
+# from frontend.kivy_ui import my_eth_tester
 
-class sniffer():
+class sniffer_class():
 
     def __init__(self):
         self.isListening = True
-        self.newPacket = False
+        self.db_path = None
         self.timeout = 2
-        self.packet_id = 0
         self.write_to_pcap = True
-        self.db_path= f"/home/tester/ba/traffic_{dt.utcnow}.db"
-        self.init_db()
-
-
+        self.pcap_path= f"/root/ba/traffic_{dt.utcnow}.pcap"
+        self.packet_id = 0
+        
     def set_isListening(self, isListening_in):
         self.isListening = isListening_in
         if self.isListening:
             self.sniff_traffic()
 
-
     def get_isListening(self):
         return self.isListening
-
 
     def packet_handler(self, pkt):
         """
         This function triggers when a new packet is detected by the scapys sniff function. It writes the packet to a pcap file and into the database.
         """
         if self.write_to_pcap:
-            wrpcap("traffic.pcap", pkt, append=True)     # appends sniffed packets to pcap file
-
+            wrpcap(self.pcap_path, pkt, append=True)     # appends sniffed packets to pcap file
+        
+        
         pkt_values = [None] * 11         # later to be converted into a tuple to write into database ... filled with None's so when intendet value can not be parsed, None will be written into database
         # packet id needs to be set manually so that the id can be turned over to the ui ... otherwise the database could do that implicitly
         pkt_values[0] = self.packet_id
@@ -68,19 +65,18 @@ class sniffer():
             pkt_values[10] = pkt["Raw"].load
 
         pkt_values[9] = dt.now()
+        pkt_values[11] = pkt.show(dump=True)
         pkt_values_tuple = tuple(pkt_values)
 
+
+        # this code should be in the database component ...  but it isnt, due to unforseen complexity, or maybe bad code architectur -> should be imporved in next iteration
         connection = sql.connect(self.db_path)
         cursor = connection.cursor()
-        insert_cmd = """ INSERT INTO packets (packet_id, mac_src, mac_dst, eth_type, ip_src, ip_dst, transport_proto, src_port, dst_port, timestamp, raw_data)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); """
+        insert_cmd = """ INSERT INTO packets (packet_id, mac_src, mac_dst, eth_type, ip_src, ip_dst, transport_proto, src_port, dst_port, timestamp, raw_data, pkt_details)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); """
         cursor.execute(insert_cmd, pkt_values_tuple)
         connection.commit()
         connection.close()
-
-        my_eth_tester.add_packet(packet=pkt_values_tuple)
-        self.newPacket = True
-
 
     def stop_sniffing_check(x):
         if my_hw_info.get_isListening():
@@ -88,36 +84,8 @@ class sniffer():
         else:
             return True
 
-
     def sniff_traffic(self):
         # while scan_settings.get_isListening():
         #    print(scan_settings.get_isListening())
         iface_name = my_hw_info.get_nicInfo()[0]
         sniff(prn=self.packet_handler, stop_filter=self.stop_sniffing_check, iface=iface_name)       # it is important to not actually call the function packet_handler() instead only name it to be called on packets arival ... otherwise scapy does not turn over the packet previously sniffed and the function is missing the required input
-
-
-    def init_db(self):
-        connection = sql.connect(self.db_path)       # connection to the database ... if not already exitst it will be created
-        cursor = connection.cursor()            # is used to interact with database
-
-        # enable wal mode (write ahead logging) --> enables simultanious read and write ... as far as i know
-        cursor.execute("PRAGMA journal_mode = WAL;")  
-
-        # the following command creates the table for the database which is to be populated later
-        create_table = """ CREATE TABLE IF NOT EXISTS packets(
-        packet_id INTEGER PRIMARY KEY,
-        mac_src TEXT NOT NULL, 
-        mac_dst TEXT NOT NULL,
-        eth_type TEXT NOT NULL,
-        ip_src TEXT,
-        ip_dst TEXT,
-        transport_proto TEXT,
-        src_port INTEGER,
-        dst_port INTEGER,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-        raw_data BLOB
-        ); """
-        cursor.execute(create_table)
-        connection.commit()
-        connection.close()
-

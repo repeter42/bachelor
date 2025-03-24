@@ -7,8 +7,7 @@ import ipaddress
 from hwinfo import my_hw_info
 
 
-
-class dhcp():
+class dhcp_class():
 
     def __init__(self):
         """
@@ -25,7 +24,6 @@ class dhcp():
         self.netmask = None     # type: str     
         self.options = []       # type: list[str]     # dhcp offer or ack could have different options --> this list always contains the newest option list
 
-
     def build_dhcp_discover(self):
         """
         This function returns the built ethernet frame of the dhcp_discover paacket
@@ -40,7 +38,6 @@ class dhcp():
         eth_dhcp_discover = eth_frame/ip_packet/proto_segment/bootp_message/dhcp_discover
         # eth_dhcp_discover.show()
         self.discover = eth_dhcp_discover
-
 
     def build_dhcp_request(self):
         """
@@ -66,7 +63,6 @@ class dhcp():
         eth_dhcp_request = eth_frame/ip_packet/proto_segment/bootp_message/dhcp_request
 
         self.request = eth_dhcp_request
-
 
     def write_dhcp_info(self, replys):
         """
@@ -105,7 +101,6 @@ class dhcp():
                 self.gateway = option[1]
         self.options = clean_options
 
-
     def send_packet(self, packet, dhcp=True):
         """
         This function sends a packet (bootrequest: dhcpdiscover and dhcprequest), and waits for responses (bootreply) and returns these.
@@ -132,7 +127,6 @@ class dhcp():
         # print(bootreply["IP"].proto)
 
         return answers
-
 
     # def subent_to_cidr(self, mask):
     #     """
@@ -167,7 +161,6 @@ class dhcp():
 
     #     return cidr
 
-
     def bind_new_ip(self):
         """
         Binds the new IP to the interface. 
@@ -185,7 +178,6 @@ class dhcp():
         subprocess.run(f"ip route add default via {self.gateway} dev {my_hw_info.get_nicInfo()[0]}", shell=True, check=True)
         # subprocess.run(f"ip route add {self.cidr} dev {my_hw_info.get_nicInfo()[0]}")
 
-
     def arp_test(self):
         """
         Bevor a DHCP DECLINE can be acceped the client needs to check if the suggested ip address is already taken. 
@@ -198,7 +190,7 @@ class dhcp():
         if self.new_ip == None:
             print("No IP Address to arp test")
         arp = pkt=scapy.layers.l2.Ether(dst="ff:ff:ff:ff:ff:ff")/scapy.layers.l2.ARP(pdst=self.new_ip, hwsrc=my_hw_info.get_nicInfo()[1])
-        arprl = self.send_packet(arp)       # arprl: arp response list
+        arprl = self.send_packet(arp, dhcp=False)       # arprl: arp response list
         # if there are no responses to the arp request that means the ip is likly NOT taken
         if len(arprl) == 0:
             ipIsTaken = False
@@ -214,7 +206,7 @@ class dhcp():
                 if arpr["ARP"].op == "is-at":   
                     ipIsTaken = True
                     print("arp: ip taken")
-
+        return ipIsTaken
 
     def release_and_flush_old_ip(self):
         """
@@ -222,9 +214,8 @@ class dhcp():
         :return: void
         """
         release = self.build_dhcp_release()
-        self.send_packet(release)
+        self.send_packet(release, dhcp=False)
         subprocess.run(f"ip addr flush dev {my_hw_info.get_nicInfo()[0]}", shell=True, check=True)
-
 
     def build_dhcp_release(self):
         """
@@ -246,7 +237,7 @@ class dhcp():
         return eth_dhcp_release
 
 
-def test_uplink():
+def uplink_test():
         """
         This tests whether clients can reach the internet by sending a curl to clouldflare. 
             Cloudflare or rather cloudflares IPs via https so the certificate is checkt to definitvly know there is an uplink.
@@ -261,7 +252,6 @@ def test_uplink():
             return False
         else:
             return True
-
 
 def get_isp():
         """
@@ -288,19 +278,5 @@ def get_isp():
 
 
 
-
-# # dhcp usage: # here for test and debugging purposes
-
-# my_dhcp = dhcp()
-# my_dhcp.build_dhcp_discover()
-# my_dhcp.offers = my_dhcp.send_packet(my_dhcp.discover)
-# my_dhcp.build_dhcp_request()
-# my_dhcp.ack = my_dhcp.send_packet(my_dhcp.request)
-# my_dhcp.bind_new_ip()
-
-print(get_isp())
-
-# print(type(ack[DHCP].options))         # type: ignore
-# print(ack[DHCP].options)                # type: ignore
 
   
