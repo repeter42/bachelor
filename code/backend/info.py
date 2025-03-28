@@ -1,17 +1,11 @@
-import scapy
 from scapy.all import *
 
-class hw_info():
-    """
-    This class is supposed to be a singelton like object in which settings are saved and accessed
-    """
+class info_class():
 
-    def __init__(self, in_timeout=2, in_isListening=True):
-        self.timeout = in_timeout
-        self.isListening = in_isListening
+    def __init__(self, timeout_in = 3, isListening_in = True):
+        self.timeout = timeout_in
+        self.isListening = isListening_in   # whether or not program is listening fot traffic
         self.nicInfo = self.set_nicInfo()
-        self.whichFunction = None   # for debugging purposes
-
 
     def set_nicInfo(self):
         iface_list = get_if_list()
@@ -27,24 +21,17 @@ class hw_info():
                 
                 return (nicName, byteMac) 
 
-
     def get_nicInfo(self):
+        """
+        :returns: nicInfo: [0]name, [1]mac
+        :rtype: (str, str)
+        """
         return self.nicInfo
-
 
     def set_timeout(self, in_timeout):
         self.timeout = in_timeout
-    
+
     def get_timeout(self):
         return self.timeout
 
-
-    # def set_isListening(self, in_isListening):
-    #     self.isListening = in_isListening
-
-    # def get_isListening(self):
-    #     return self.isListening
-    
-
-
-my_hw_info = hw_info()
+my_info = info_class()

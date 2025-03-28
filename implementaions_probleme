@@ -75,4 +75,11 @@ Filtern von Ethernet packets welche nicht auf IP basieren ... führt zu fehlern 
     chromium ne extension installieren welche das können soll crxMouse-estures ... nix da
     --> erstmal sein lassen, chrom hat wenigstens vernünftig dicke scroll bars ...
 
+13) db path ... keine absoluten paths welche ggf in auf anderen system nicht funktionieren würden
+    --> /var/opt/connectest anlegen und dort rein schreiben
+
+14) import probleme 
+    frontend muss irwie als modul laufen ?! why ever the fuck that is ... sonst funktionieren die imports nicht
+        --> funktioniert aber nicht mit absolutem pfad --> muss erst "cd" in das directory --> dann frontend.kivy_ui ausfüren
+    api muss manche fertige objekte aus den datein importiern und kann diese nicht selbst erstellen damit keine circular imports entstehen ...
 

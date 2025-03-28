@@ -1,5 +1,6 @@
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -9,8 +10,7 @@ from kivy.graphics import Color, Rectangle
 from kivy.metrics import dp
 
 from scapy.layers.l2 import Ether
-# from backend.sniffer import sniffer
-from backend.hwinfo import my_hw_info
+from backend import api
 
 class ColorLabel(Label):
     def __init__(self, color=(0.5, 0.5, 0.5, 1), **kwargs):
@@ -99,7 +99,10 @@ class ButtonGrid(GridLayout):
         self.bind(minimum_height=self.setter('height'))
         # self.row_count = 0
         self.buttons = []
-        self.big_label = lb_detail_in
+        self.lb_detail = lb_detail_in
+
+# needs to be recoded
+# BEGIN RECODE ---------------------------------------
 
     def populate_grid(self, color):
         self.clear_widgets()
@@ -129,64 +132,119 @@ class ButtonGrid(GridLayout):
         color = True if self.row_count % 2 == 0 else False
         self.populate_grid(color=color)
 
+# END RECODE
+
     def on_button_click(self, instance):
         # When the button is released (i.e. a tap is complete), update the detail label.
-        self.big_label.text = instance.get_combined_text() + "\n"
+        self.lb_detail.text = instance.get_combined_text() + "\n"
+
 
 class EthPortTestApp(App):
     def build(self):
 
-        from backend.sniffer import sniffer
-        self.my_sniffer = sniffer()
-        # Top bar with search input and buttons.
+        self.my_sniffer = api.api_sniffer
+        # Top bar buttons.
         top_bar = BoxLayout(size_hint_y=None, height=50, spacing=5, padding=5)
-        search_input = TextInput(hint_text="Search...", size_hint_x=0.4, height=50)
-        btn_start_listen = Button(text="start listen", size_hint_x=0.15, height=50, on_press=self.btn_start_listening)
-        btn_stop_listen = Button(text="stop listen", size_hint_x=0.15, height=50, on_press=self.btn_stop_listening)
-        btn3 = Button(text="Btn 3", size_hint_x=0.15, height=50)
-        btn4 = Button(text="Btn 4", size_hint_x=0.15, height=50)
-        top_bar.add_widget(search_input)
+        btn_start_listen = Button(text="start listen", size_hint_x=0.15, height=50, on_press=self.btn_start_listening_click)
+        btn_stop_listen = Button(text="stop listen", size_hint_x=0.15, height=50, on_press=self.btn_stop_listening_click)
+        btn_clear_packets = Button(text="clear packets", size_hint_x=0.15, height=50, on_press=self.btn_clear_packets_click)
+        btn_test_network = Button(text="test network", size_hint_x=0.15, height=50, on_press=self.btn_test_network_click)
+        self.writing_pcap_ui = True
+        btn_save_to_pcap = Button(text="writing pcap: yes", size_hint_x=0.15, height=50, on_press=self.btn_save_to_pcap_click)
+        btn_swich_view = Button(text="switch view", size_hint_x=0.15, height=50, on_press=self.btn_switch_view_click)
         top_bar.add_widget(btn_start_listen)
         top_bar.add_widget(btn_stop_listen)
-        top_bar.add_widget(btn3)
-        top_bar.add_widget(btn4)
+        top_bar.add_widget(btn_clear_packets)
+        top_bar.add_widget(btn_test_network)
+        top_bar.add_widget(btn_save_to_pcap)
+        top_bar.add_widget(btn_swich_view)
 
-        # Packet display area: left list of packets, right details view.
+        # Packet display area: left list of packets, right details view
         packet_display = BoxLayout(orientation="horizontal")
 
-        # Packet details view.
+        # Packet details view
         self.lb_detail = ColorLabel(text="", size_hint_x=1, size_hint_y=1)
         self.lb_detail.halign = "left"
         self.lb_detail.valign = "top"
         scroll_lb_packet_detail = ScrollView(size_hint_x=0.5, size_hint_y=1)
         scroll_lb_packet_detail.add_widget(self.lb_detail)
 
-        # Packet list view.
+        # Packet list view
         self.label_grid = ButtonGrid(lb_detail_in=self.lb_detail)
         scroll_lb_grid_packet_list = ScrollView(size_hint_x=0.5, size_hint_y=1)
         scroll_lb_grid_packet_list.add_widget(self.label_grid)
 
         packet_display.add_widget(scroll_lb_grid_packet_list)
         packet_display.add_widget(scroll_lb_packet_detail)
+        
+        # FloatLayout to manage overlay
+        self.main_view = FloatLayout()
+
+        # Add packet_display as the base layer
+        self.main_view.add_widget(packet_display)
+
+        # Network Overlay view (Initially hidden)
+        self.lb_network_view = ColorLabel(
+            text="NETWORK STATUS",
+            color=(0.6, 0.6, 0.6, 1),
+            size_hint=(1, 1),  # Adjust size as needed
+            # pos_hint={"center_x": 0.5, "center_y": 0.5},
+            pos_hint={"x": 0, "y": 0},
+            opacity=0,  # Initially hidden
+            disabled=True
+        )
+        self.lb_network_view.halign = "left"
+        self.lb_network_view.valign = "top"
+        scroll_lb_network_view = ScrollView()
+        scroll_lb_network_view.add_widget(self.lb_network_view)
+        self.main_view.add_widget(scroll_lb_network_view)
 
         # Complete layout.
         layout = BoxLayout(orientation="vertical")
         layout.add_widget(top_bar)
-        layout.add_widget(packet_display)
+        layout.add_widget(self.main_view)
 
         return layout
 
     def add_packet(self, packet):
         self.label_grid.add_row(packet)
 
-    def btn_start_listening(self, instance):
-        self.my_sniffer.set_isListening(isListening_in=True)
+    def btn_start_listening_click(self, instance):
+        api.start_sniffing()
 
-    def btn_stop_listening(self, instance):
-        self.my_sniffer.set_isListening(isListening_in=False)
+    def btn_stop_listening_click(self, instance):
+        api.stop_sniffing()
+    
+    def btn_clear_packets_click(self, instance):
+        api.clear_packets()
+
+    def btn_test_network_click(self, instance):
+        connectivity_info = api.test_network()
+        dhcp_info = api.get_dhcp_info()
+        net_print = "NETWORK STATUS\n\nCONNECTIVITY" + connectivity_info + "\n\n" + dhcp_info
+        # print(connectivity_info)
+        # print(dhcp_info)
+        self.lb_network_view.text = net_print 
+    
+    def btn_save_to_pcap_click(self, instance):
+        self.writing_pcap_ui = not self.writing_pcap_ui
+        if self.writing_pcap_ui:
+            instance.text = "writing pcap: yes"
+            api.set_write_to_pcap(True)
+        else:
+            instance.text = "writing pcap: no"
+            api.set_write_to_pcap(False)
+
+    def btn_switch_view_click(self, instance):
+        # Toggle visibility of the overlay
+        if self.lb_network_view.opacity == 0:
+            self.lb_network_view.opacity = 1
+            self.lb_network_view.disabled = False
+        else:
+            self.lb_network_view.opacity = 0
+            self.lb_network_view.disabled = True
 
 
 my_eth_tester = EthPortTestApp()
 if __name__ == "__main__":
     my_eth_tester.run()
-    

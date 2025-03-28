@@ -1,0 +1,4 @@
+als root:
+    cat ~user/.Xauthority > /root/.Xauthority 
+    ps ew | grep "systemd --user" | tr " " \\n | grep ^DISPLAY
+--> setzen der DISCPLY variable

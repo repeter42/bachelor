@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python Debugger: Module",
+            "type": "debugpy",
+            "request": "launch",
+            "module": ".vscode/launch.json"
+        },
+
+        {
+            "name": "Run kivy_ui as a module",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "frontend.kivy_ui",  
+            "cwd": "${workspaceFolder}",  
+            //"console": "integratedTerminal"
+            "console": "internalConsole"
+        }
+    ]
+}
