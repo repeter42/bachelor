@@ -1,24 +1,14 @@
 from network import dhcp_class, test_uplink, test_isp, test_carrier, test_portal, dummy_test_uplink
 from sniffer import sniffer_class
-# from info import my_info as api_info
-# from db import my_db as api_db
 from info import info_class
 from db import db_class
+import threading
 
-# OBJECTS
-api_info = info_class()
-api_db = db_class()
-api_dhcp = dhcp_class()
-api_sniffer = sniffer_class()
 
 # ERROR
 error = None       # when error occurs and gets caught, error is written here 
 def get_error():
     return error
-
-
-# INIT
-api_sniffer.db_path =api_db.db_path
 
 
 # HARDWARE
@@ -27,6 +17,7 @@ def init_hw():
 
 def set_timeout(timeout_in):        # in case of later implementaions, so that the timeout may be set.
     api_info.timeout(timeout_in)
+
 
 
 # DHCP
@@ -189,5 +180,14 @@ def get_isListening():
     """
     return api_sniffer.isListening
 
+
+# INIT
+api_info = info_class()
+api_db = db_class()
+api_dhcp = dhcp_class()
+api_sniffer = sniffer_class()
+api_sniffer.db_path =api_db.db_path
+
+init_hw()
 
 # WHATNOT

@@ -6,10 +6,10 @@
     "configurations": [
 
         {
-            "name": "Python Debugger: Module",
+            "name": "Run Current File",
             "type": "debugpy",
             "request": "launch",
-            "module": ".vscode/launch.json"
+            "program": "${file}"
         },
 
         {
