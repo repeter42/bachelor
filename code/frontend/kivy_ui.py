@@ -10,7 +10,9 @@ from kivy.graphics import Color, Rectangle
 from kivy.metrics import dp
 
 from scapy.layers.l2 import Ether
-from backend import api
+from backend.api import api_class
+from multiprocessing import Process
+import threading
 
 class ColorLabel(Label):
     def __init__(self, color=(0.5, 0.5, 0.5, 1), **kwargs):
@@ -39,7 +41,6 @@ class ColorLabel(Label):
             max(0, self.height - 2 * padding_y)
         )
         
-
 class GridButton(Button):
     def __init__(self, text, color=(0.5, 0.5, 0.5, 1), **kwargs):
         super().__init__(**kwargs)
@@ -89,7 +90,6 @@ class GridButton(Button):
                 return False  # do not consume; allow parent to scroll
         return super().on_touch_move(touch)
 
-
 class ButtonGrid(GridLayout):
     def __init__(self, lb_detail_in, **kwargs):
         super().__init__(**kwargs)
@@ -138,11 +138,11 @@ class ButtonGrid(GridLayout):
         # When the button is released (i.e. a tap is complete), update the detail label.
         self.lb_detail.text = instance.get_combined_text() + "\n"
 
-
 class EthPortTestApp(App):
     def build(self):
 
-        self.my_sniffer = api.api_sniffer
+        self.api = api_class()
+
         # Top bar buttons.
         top_bar = BoxLayout(size_hint_y=None, height=50, spacing=5, padding=5)
         btn_start_listen = Button(text="start listen", size_hint_x=0.15, height=50, on_press=self.btn_start_listening_click)
@@ -210,17 +210,23 @@ class EthPortTestApp(App):
         self.label_grid.add_row(packet)
 
     def btn_start_listening_click(self, instance):
-        api.start_sniffing()
+        #self.sniffing_process = Process(target=api.start_sniffing)
+        self.sniffing_process = Process(target=self.api.start_sniffing)
+        self.sniffing_process.start()
 
     def btn_stop_listening_click(self, instance):
-        api.stop_sniffing()
+        # api.stop_sniffing()
+        self.api.stop_sniffing()
     
     def btn_clear_packets_click(self, instance):
-        api.clear_packets()
+        # api.clear_packets()
+        self.api.clear_packets()
 
     def btn_test_network_click(self, instance):
-        connectivity_info = api.test_network()
-        dhcp_info = api.get_dhcp_info()
+        # connectivity_info = api.test_network()
+        connectivity_info = self.api.test_network()
+        # dhcp_info = api.get_dhcp_info()
+        dhcp_info = self.api.get_dhcp_info()
         net_print = "NETWORK STATUS\n\nCONNECTIVITY" + connectivity_info + "\n\n" + dhcp_info
         # print(connectivity_info)
         # print(dhcp_info)
@@ -230,10 +236,12 @@ class EthPortTestApp(App):
         self.writing_pcap_ui = not self.writing_pcap_ui
         if self.writing_pcap_ui:
             instance.text = "writing pcap: yes"
-            api.set_write_to_pcap(True)
+            # api.set_write_to_pcap(True)
+            self.api.set_write_to_pcap(True)
         else:
             instance.text = "writing pcap: no"
-            api.set_write_to_pcap(False)
+            # api.set_write_to_pcap(False)
+            self.api.set_write_to_pcap(False)
 
     def btn_switch_view_click(self, instance):
         # Toggle visibility of the overlay

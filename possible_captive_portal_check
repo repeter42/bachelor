@@ -1,0 +1,28 @@
+import requests
+
+def check_captive_portal():
+    test_url = "http://connectivitycheck.gstatic.com/generate_204"
+    
+    try:
+        response = requests.get(test_url, allow_redirects=False, timeout=5)
+        
+        if response.status_code == 204:
+            print("✅ Kein Captive Portal erkannt. Freier Internetzugang.")
+            return False
+        elif response.status_code in (301, 302, 303, 307, 308):
+            print(f"⚠️ Umleitung erkannt! Vermutlich Captive Portal: {response.headers['Location']}")
+            return True
+        else:
+            print(f"⚠️ Unerwarteter Statuscode {response.status_code}. Möglicherweise Captive Portal.")
+            return True
+            
+    except requests.RequestException as e:
+        print(f"❌ Fehler beim Prüfen des Portals: {e}")
+        return True
+
+if __name__ == "__main__":
+    is_captive = check_captive_portal()
+    print(f"Captive Portal aktiv: {is_captive}")
+
+
+

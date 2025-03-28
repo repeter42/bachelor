@@ -124,7 +124,7 @@ class dhcp_class():
         """
         device_name = api_info.get_nicInfo()[0]
         conf.checkIPaddr = False            # setting this conf is very important ... if not set, scapy can not match the dhcp offer to my sent dhcp discover
-        ans, unans =srp(packet, iface=device_name, multi=True, timeout=api_info.get_timeout())
+        ans, unans =srp(packet, iface=device_name, multi=True, timeout=api_info.timeout)
         
         answers = []                        # creating a list for answers, as there could be multiple responses
         for send_recive in ans:             # itterating through all the responses

@@ -28,10 +28,11 @@ class info_class():
         """
         return self.nicInfo
 
-    def set_timeout(self, in_timeout):
-        self.timeout = in_timeout
+    # # getter and setter are there now
+    # def set_timeout(self, in_timeout):
+    #     self.timeout = in_timeout
 
-    def get_timeout(self):
-        return self.timeout
+    # def get_timeout(self):
+    #     return self.timeout
 
 my_info = info_class()

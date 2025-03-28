@@ -21,7 +21,7 @@ class db_class():
 
         # the following command creates the table for the database which is to be populated later
         create_table = """ CREATE TABLE IF NOT EXISTS packets(
-        packet_id INTEGER PRIMARY KEY,
+        packet_id INTEGER PRIMARY KEY AUTOINCREMENT,
         mac_src TEXT NOT NULL, 
         mac_dst TEXT NOT NULL,
         eth_type TEXT NOT NULL,
